@@ -33,7 +33,7 @@ def Process_Module_Folders(baseDirectory):
 	mNames = os.listdir(baseDirectory)
 	for mName in mNames:
 		if (os.path.isdir(mName)) and (mName[0:4] == 'eds_') and (len(mName) == len('EDS_XX')):
-			mPath = baseDirectory + os.sep + mName
+			mPath = os.path.join(baseDirectory, mName)
 			module = Find_Module_Details(mName, mPath)
 			allModules.append(module)
 
@@ -41,36 +41,36 @@ def Find_Module_Details(mName, mPath):
 	module = Module()
 	module.name = mName
 	module.path = mPath
-	matlabFolder = module.path + os.sep + 'matlab'
+	matlabFolder = os.path.join(module.path,'matlab')
 	fNames = os.listdir(matlabFolder)
 	for fName in fNames:
 		if (fName[-3:] == 'mdl') and (fName[0:len('EDS_xxy')].upper() == module.name.upper() + '1'):
 			module.model.name = fName
-			module.model.ver = Get_File_Version(matlabFolder + os.sep + fName)
-			module.model.date = time.ctime(os.stat(matlabFolder + os.sep + fName).st_mtime)
+			module.model.ver = Get_File_Version(os.path.join(matlabFolder,fName))
+			module.model.date = time.ctime(os.stat(os.path.join(matlabFolder,fName)).st_mtime)
 
 		if (fName[-5:] == 'par.m') and (fName[0:len('EDS_xxy')].upper() == module.name.upper() + '1'):
 			module.params.name = fName
-			module.params.ver = Get_File_Version(matlabFolder + os.sep + fName)
-			module.params.date = time.ctime(os.stat(matlabFolder + os.sep + fName).st_mtime)
+			module.params.ver = Get_File_Version(os.path.join(matlabFolder,fName))
+			module.params.date = time.ctime(os.stat(os.path.join(matlabFolder,fName)).st_mtime)
 
 		if (fName[-9:] == 'scaling.m') and (fName[0:len('EDS_xxy')].upper() == module.name.upper() + '1'):
 			module.scaling.name = fName
-			module.scaling.ver = Get_File_Version(matlabFolder + os.sep + fName)
-			module.scaling.date = time.ctime(os.stat(matlabFolder + os.sep + fName).st_mtime)
+			module.scaling.ver = Get_File_Version(os.path.join(matlabFolder,fName))
+			module.scaling.date = time.ctime(os.stat(os.path.join(matlabFolder,fName)).st_mtime)
 
-	codeFolder = matlabFolder + os.sep + 'tlcode'
+	codeFolder = os.path.join(matlabFolder,'tlcode')
 	fNames = os.listdir(codeFolder)
 	for fName in fNames:
 		if (fName[-1:] == 'c') and (fName[0:len('EDS_xxy')].upper() == module.name.upper() + '1'):
 			module.code.name = fName
-			module.code.ver = Get_File_Version(codeFolder + os.sep + fName)
-			module.code.date = time.ctime(os.stat(codeFolder + os.sep + fName).st_mtime)
+			module.code.ver = Get_File_Version(os.path.join(codeFolder,fName))
+			module.code.date = time.ctime(os.stat(os.path.join(codeFolder,fName)).st_mtime)
 
 		if (fName[-1:] == 'h') and (fName[0:len('EDS_xxy')].upper() == module.name.upper() + '1'):
 			module.header.name = fName
-			module.header.ver = Get_File_Version(codeFolder + os.sep + fName)
-			module.header.date = time.ctime(os.stat(codeFolder + os.sep + fName).st_mtime)
+			module.header.ver = Get_File_Version(os.path.join(codeFolder,fName))
+			module.header.date = time.ctime(os.stat(os.path.join(codeFolder,fName)).st_mtime)
 
 	return module
 
